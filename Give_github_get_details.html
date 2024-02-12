@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    body{
+        background-color: black;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin: 20px;
+        padding: 30px;
+        
+    }
+    #card{
+        height: 300px;
+        width: 300px;
+        border: 2px soid rgb(248, 0, 0);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        backdrop-filter: blur(60px); /* Apply blur effect */
+        background-color: rgba(255, 255, 255, 0.132); /* Set transparency */
+    }
+    #image{
+        height: 200px;
+        width: 200px;
+        background-image: url('');
+        background-size: cover;
+        background-position: center;
+        margin: 10px;
+    }
+    #result{
+        height: 400px;
+        width: 400px;
+        /* border: 2px solid white; */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+    }
+    input{
+        border-radius: 10px;
+        width: 200px;
+        height: 30px;
+        margin: 15px;
+    }
+    #btn{
+        height: 50px;
+        width: 140px;
+        background-color: rgb(29, 121, 29);
+        color: white;
+        border-radius: 5px;
+        font-size: large;
+        box-shadow: 2px 2px;
+        margin: 5px;
+        border: none;
+        transition: transform 0.2s;
+    }
+    #btn:active {
+        transform: translateY(2px); /* Push-like animation on click */
+    }
+</style>
+<body>
+    <label for="">Enter Github username</label>
+    <input type="text" name="" id="get_username">
+    <button id="btn">Submit</button>
+    <div id="result">
+        <div id="card">
+            <div id="image">
+                
+            </div>
+            <div id="details"></div>
+        </div>
+    </div>
+</body>
+<script>
+    
+    const usernameInput = document.querySelector("#get_username");
+    const submitButton = document.querySelector("#btn");
+
+    // Disable the button initially if the input is empty
+    submitButton.disabled = !usernameInput.value.trim();
+    
+    // Listen for changes in the input field's value
+    usernameInput.addEventListener('input', function() {
+        // Enable/disable the button based on the input value
+        submitButton.disabled = !usernameInput.value.trim();
+    });
+    document.querySelector("#btn").addEventListener('click',function(e){
+        const val=document.querySelector("#get_username")
+        
+        const username=val.value;
+        
+        console.log(username)
+        const requestURL=`https://api.github.com/users/${username}`
+
+        const xml=new XMLHttpRequest();
+        xml.open("GET",requestURL)
+        xml.onreadystatechange=function(){
+            if(xml.readyState===4){
+                const res=JSON.parse(this.responseText);
+                const img=document.querySelector('#image')
+                console.log(img)
+                img.style.backgroundImage = `url(${res.avatar_url})`; // 
+                console.log(res.avatar_url)
+                const det=document.querySelector('#details')
+                det.innerHTML=''
+                const child1=document.createTextNode(`Followers:${res.followers}\n`)
+                const child2=document.createTextNode(`Public repositories:${res.public_repos}\n`)
+                const child3=document.createTextNode(`Name:${res.name}`)
+                let child4
+                if(res.hireable){
+                    child4=document.createTextNode(`Free for work:Yes`)
+                }
+                else{
+                    child4=document.createTextNode(`Free for work:No`)
+                }
+                det.appendChild(child3)
+                det.appendChild(document.createElement('br'))
+                det.appendChild(child1)
+                det.appendChild(document.createElement('br'))
+                det.appendChild(child2)
+                det.appendChild(document.createElement('br'))
+                det.appendChild(child4)
+               val.value=""
+            }
+        }
+        xml.send()
+    })
+    
+</script>
+</html>
