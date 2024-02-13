@@ -122,6 +122,7 @@
                 else{
                     child4=document.createTextNode(`Free for work:No`)
                 }
+                
                 det.appendChild(child3)
                 det.appendChild(document.createElement('br'))
                 det.appendChild(child1)
@@ -129,6 +130,9 @@
                 det.appendChild(child2)
                 det.appendChild(document.createElement('br'))
                 det.appendChild(child4)
+                if(res.name===null){
+                    det.innerHTML="User Not Exist"
+                }
                val.value=""
             }
         }
